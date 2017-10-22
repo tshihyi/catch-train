@@ -1,0 +1,52 @@
+{
+  "name": "catch-train",
+  "version": "0.0.1",
+  "description": "catch train",
+  "scripts": {
+    "dev": "webpack-dev-server",
+    "build": "cross-env NODE_ENV=production webpack",
+    "pretest": "npm run build",
+    "test": "nyc --instrument false lsc test",
+    "posttest": "nyc report -r lcov -r json",
+    "deploy": "npm t && firebase deploy"
+  },
+  "license": "Unlicense",
+  "files": [
+    "www",
+    "server.js"
+  ],
+  "dependencies": {
+    "express": "",
+    "web-push": ""
+  },
+  "devDependencies": {
+    "babel-loader": "",
+    "babel-minify-webpack-plugin": "",
+    "babel-plugin-istanbul": "",
+    "babel-plugin-transform-component-name": "",
+    "babel-plugin-transform-es2015-modules-commonjs": "",
+    "babel-plugin-transform-react-jsx": "",
+    "babel-preset-stage-0": "",
+    "babel-register": "",
+    "cross-env": "",
+    "css-loader": "",
+    "extract-loader": "",
+    "file-loader": "",
+    "html-plugin": "",
+    "linking": "next",
+    "livescript": "",
+    "livescript-next": "",
+    "node-sass": "",
+    "nyc": "",
+    "preact": "",
+    "preact-render-to-string": "",
+    "redux": "",
+    "sass-loader": "",
+    "style-loader": "",
+    "tape": "",
+    "webpack": "",
+    "webpack-dev-server": "",
+    "workbox-webpack-plugin": ""
+  },
+  "private": true
+}
