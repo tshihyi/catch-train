@@ -1,10 +1,10 @@
 import {h} from './link'
 
-export default props =>
+export default ({departure, arrival}) =>
 <div class="notice">
   <div>
     <div class="time">
-      18:13
+      {departure}
     </div>
     <div >
       當前車站
@@ -15,7 +15,7 @@ export default props =>
   </div>
   <div>
     <div class="time">
-      18:37
+      {arrival}
     </div>
     <div>
       新左營

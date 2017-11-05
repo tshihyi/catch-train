@@ -1,6 +1,5 @@
 import {h} from './link'
-import notice from './train-notice'
-
+import notice from './current-train'
 
 export default props =>
 <div>
