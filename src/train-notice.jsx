@@ -6,7 +6,7 @@ export default ({departure, arrival}) =>
     <div class="time">
       {departure}
     </div>
-    <div >
+    <div>
       當前車站
     </div>
   </div>
@@ -18,7 +18,7 @@ export default ({departure, arrival}) =>
       {arrival}
     </div>
     <div>
-      新左營
+      目的車站
     </div>
   </div>
 </div>
