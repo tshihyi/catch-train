@@ -37,33 +37,82 @@ function timetable-entries raw-data
   trains = try-parse raw-data ?.TrainInfos || []
   []concat ...trains.map ({Train: train, TimeInfos: entries}) ->
     entries.map ({Station: station, DepTime: departure}) ->
-      {station, train, departure}
+      {station, train, departure: departure.slice 0 5}
+    .sort!
 
-function merge-groups {groups, group-id, tables} {date, entries}
-  new-groups = []
-  group-map = {}
-  new-id = {}
+function hash-entry
+  it<[station train departure]>join ' '
+
+function merge-entries data, {date, entries}
   entries.for-each ->
-    id = group-id[hash it]
-    if !(id of group-map)
-      group-map[id] = new-groups.length
-      new-groups.push []
-    index = group-map[id]
-    new-id[key] = groups.length + index
-    new-groups[index]push it
+    key = hash-entry it
+    if !(key of data)
+      data[key] = entry: it, date-list: []
+    data[key]date-list.push date
+  data
 
-function clean-up
-  it
+function round-up data
+  groups = []
+  group-id = {}
+  items = Object.values data
+  items.for-each ->
+    key = it.date-list.join ' '
+    if !(key of group-id)
+      groups.push it.date-list
+      group-id[key] = groups.length
+
+  date-groups = {}
+  groups.for-each (list, id) ->
+    list.for-each (date) ->
+      date-groups[date] = (date-groups[date] || [])concat id
+
+  time-entries: items.map ->
+    Object.assign {} it.entry, group: group-id[it.date-list.join ' ']
+  date-groups: date-groups
+
+function add a, b => a + b
+
+function try-update ref, data
+  ref.get!then (doc) ->
+    if !doc.exists || doc.data!group != data.group
+      ref.set data
+
+function push-update db, {date-groups, time-entries}
+  db.collection \public .doc \date-groups .set date-groups
+  Promise.all time-entries.map ->
+    ref = db.collection \time-entries .doc hash-entry it
+    try-update ref, it
 
 function main
+  firebase = require \firebase-admin
+  firebase.initialize-app credential:
+    firebase.credential.cert require \./firebase.admin.json
+  db = firebase.firestore!
+
   range = [\20180302 \20180303]
+  range = Array.from length: 3 .map (, i) ->
+    d = new Date
+    d.set-date d.get-date! + i
+    [d.get-full-year!, d.get-month! + 1, d.get-date!]
+    .map -> ('' + it)pad-start 2 '0' 2
+    .join ''
 
   Promise.all range.map (date) ->
+    console.log \loading date
     fetch-train source-url date .then ->
+      console.log \loaded date
       {date, entries: timetable-entries it}
-  .then -> it.reduce merge-groups, {}
-  .then clean-up
+  .then -> it.reduce merge-entries, {}
+  .then round-up
   .then ->
+    date-groups = Object.values it.date-groups
+    meta =
+      groups: Math.max ...[]concat ...date-groups
+      group-data-size: date-groups.map (.length) .reduce (add)
+      entries: it.time-entries.length
     console.log JSON.stringify it,, 2
+    console.log meta
+    push-update db, it
+  .then -> console.log \updated
 
 main!

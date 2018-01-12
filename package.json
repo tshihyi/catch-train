@@ -16,9 +16,10 @@
     "server.js"
   ],
   "dependencies": {
+    "firebase-admin": "",
     "express": "",
-    "unzip-stream": "",
-    "web-push": ""
+    "web-push": "",
+    "unzip-stream": ""
   },
   "devDependencies": {
     "babel-loader": "",
