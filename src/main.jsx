@@ -1,8 +1,9 @@
 import {h} from './link'
-import notice from './current-train'
+import {userOptions, suggestions} from './containers'
 
 export default props =>
 <div>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-  <notice />
+  <user-options />
+  <suggestions />
 </div>

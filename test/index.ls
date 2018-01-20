@@ -1,6 +1,12 @@
-units = {}
+units =
+  timetable: \Timetable
+  options: \Options
+  suggestions: \Suggestions
+  stations: \Stations
 
-require \../register <| plugins: <[istanbul]>
+require \livescript
+require \../register <| plugins: if process.argv.length > 2 then []
+else<[istanbul]>
 require! tape: test
 list = if process.argv.length > 2 then process.argv.slice 2
 else Object.keys units

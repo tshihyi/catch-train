@@ -58,8 +58,8 @@ function round-up data
   items.for-each ->
     key = it.date-list.join ' '
     if !(key of group-id)
-      groups.push it.date-list
       group-id[key] = groups.length
+      groups.push it.date-list
 
   date-groups = {}
   groups.for-each (list, id) ->
@@ -77,11 +77,31 @@ function try-update ref, data
     if !doc.exists || doc.data!group != data.group
       ref.set data
 
+function rate-limit count, tasks
+  queue = tasks.slice!
+  run-next = ->
+    task = queue.shift!
+    task?!then run-next
+  Promise.all <| Array.from length: count .map run-next
+
 function push-update db, {date-groups, time-entries}
   db.collection \public .doc \date-groups .set date-groups
-  Promise.all time-entries.map ->
-    ref = db.collection \time-entries .doc hash-entry it
-    try-update ref, it
+  timetable = db.collection \time-entries
+  rate-limit 16 time-entries.map (entry) -> ->
+    console.log entry
+    ref = timetable.doc hash-entry entry
+    try-update ref, entry
+
+function next-day
+  d = new Date
+  d.set-date d.get-date! + it
+  d.to-JSON!slice 0 10
+
+function format-date
+  d = new Date it
+  [d.get-full-year!, d.get-month! + 1, d.get-date!]
+  .map -> ('' + it)pad-start 2 '0'
+  .join ''
 
 function main
   firebase = require \firebase-admin
@@ -90,16 +110,12 @@ function main
   db = firebase.firestore!
 
   range = [\20180302 \20180303]
-  range = Array.from length: 3 .map (, i) ->
-    d = new Date
-    d.set-date d.get-date! + i
-    [d.get-full-year!, d.get-month! + 1, d.get-date!]
-    .map -> ('' + it)pad-start 2 '0' 2
-    .join ''
+  range = Array.from length: 60 .map (, i) ->
+    next-day i
 
   Promise.all range.map (date) ->
     console.log \loading date
-    fetch-train source-url date .then ->
+    fetch-train source-url format-date date .then ->
       console.log \loaded date
       {date, entries: timetable-entries it}
   .then -> it.reduce merge-entries, {}

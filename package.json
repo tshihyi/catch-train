@@ -46,6 +46,7 @@
     "sass-loader": "",
     "style-loader": "",
     "tape": "",
+    "tape-watch": "",
     "webpack": "",
     "webpack-dev-server": "",
     "workbox-webpack-plugin": ""

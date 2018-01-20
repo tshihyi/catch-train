@@ -26,14 +26,15 @@ base =
 
 require \./register <| {}
 html-options =
-  title: \Template content: require \./src/render-static .default
+  title: 'Catch Train' content: require \./src/render-static .default
   theme-color: try require \./www/manifest.json .theme_color
 
 base-plugins =
   new webpack.NamedModulesPlugin
   new HtmlPlugin html-options
 
-start-list = [\/ \/?utm_source=homescreen]
+firestore-assets = require \./src/firestore .asset-list
+asset-list = [\/ \/?utm_source=homescreen]concat firestore-assets
 function include-start
   {revision} = it.find -> /index\.html/test it.url
   start-list.map (-> {url: it, revision}) .concat it

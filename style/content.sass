@@ -1,5 +1,29 @@
 $font-large: 2rem
-$base-spacing: 1.5rem
+$base-spacing: 0.5rem
+$brand: #957
+
+input, select
+  color: inherit
+  background-color: inherit
+
+input
+  border-bottom: 1px solid #ccc
+  transition: border-color 0.5s ease
+  &:focus
+    border-color: $brand
+
+.options, .suggestions
+  padding: $base-spacing
+
+.options
+  display: flex
+  > input
+    flex: 1
+
+.suggestions > div
+  display: flex
+  > *
+    flex: 1
 
 .notice
   display: flex

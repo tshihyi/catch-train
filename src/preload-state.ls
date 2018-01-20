@@ -1,9 +1,27 @@
+import \./format : {format-date}
+
+function next-hours
+  d = new Date
+  d.set-hours d.get-hours! + it
+  d.to-JSON!
+
 function preload-state
+  options:
+    type: \destination location: \1228 time: next-hours 24
+    language: \zh
+
+  stations: zh: {}
+
+  timetable:
+    date: format-date next-hours 24
+    date-groups: {} time-entries: []
+
   now: \17:44
   current-location: \tainan
   destination: \xinzoying
+  #1242
 
-  timetable:
+  timetable0:
     * type: \自強號
       items:
         * time: \13:50
