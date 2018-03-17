@@ -1,9 +1,12 @@
 import {h} from './link'
-import {userOptions, suggestions} from './containers'
+import {dateOption, selectionOption, suggestions} from './containers'
 
-export default props =>
+export default () =>
 <div>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-  <user-options />
+  <div class="options">
+    <date-option name="time" />
+    <selection-option name="start" select="station" />
+    <selection-option name="destination" select="station" />
+  </div>
   <suggestions />
 </div>

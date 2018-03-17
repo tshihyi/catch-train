@@ -7,7 +7,7 @@ function next-hours
 
 function preload-state
   options:
-    type: \destination location: \1228 time: next-hours 24
+    type: \destination start: \1242 destination: \1228 time: next-hours 24
     language: \zh
 
   stations: zh: {}
@@ -16,12 +16,11 @@ function preload-state
     date: format-date next-hours 24
     date-groups: {} time-entries: []
 
+function state-origin
   now: \17:44
   current-location: \tainan
   destination: \xinzoying
-  #1242
-
-  timetable0:
+  timetable:
     * type: \自強號
       items:
         * time: \13:50

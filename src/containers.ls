@@ -1,11 +1,16 @@
 import
-  \./link : link
-  \./options : {options-state, options-props}
-  \./options-block : options-block
+  \./link : {h, link}
+  \./input : {selection, date-input}
+  \./options : {option-state, option-props}
   \./suggestions : {suggestions-state, suggestions-props}
   \./suggestion-block : suggestion-block
 
-user-options = link options-block, options-state, options-props
 suggestions = link suggestion-block, suggestions-state, suggestions-props
 
-export {user-options, suggestions}
+function link-option component
+  link component, option-state, option-props
+
+selection-option = link-option selection
+date-option = link-option date-input
+
+export {date-option, selection-option, suggestions}

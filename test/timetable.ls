@@ -1,31 +1,23 @@
 import \../src/timetable : {reduce}
 
 function main t
-  state = date: \0307
+  state = {}
   payload =
-    date-groups: '0307': [0]
-    time-entries:
-      * train: 3 station: 5 departure: '12:23' group: 1
-      * train: 3 station: 6 departure: '12:27' group: 1
-      * train: 4 station: 6 departure: '12:33' group: 1
-      * train: 4 station: 8 departure: '12:47' group: 1
+    1242:
+      * train: \3142 time: '09:43'
+      * train: \3314 time: '09:52'
+    1228:
+      * train: \3718 time: '10:16'
+      * train: \3142 time: '10:27'
   update = reduce.timetable state, payload
 
-  actual = update.date-groups
-  expected = payload.date-groups
-  t.is actual, expected, 'store date groups'
-
-  actual = update.time-entries
-  expected = payload.time-entries
-  t.is actual, expected, 'store time entries'
-
-  actual = update.stations.6.0
-  expected = train: 3 departure: '12:27'
+  actual = update.stations.1242.0
+  expected = train: \3142 time: '09:43'
   t.same actual, expected, 'prepare station lookup lists'
 
-  actual = update.trains.3.1
+  actual = update.trains?3.1
   expected = station: 6 departure: '12:27'
-  t.same actual, expected, 'prepare train lookup list'
+  #TODO prepare train list
 
   t.end!
 

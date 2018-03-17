@@ -2,29 +2,35 @@ import \../src/suggestions : {suggestions-state, suggestions-props}
 
 function main t
   state =
-    options: location: \location type: \type time: \time
+    options:
+      start: \start destination: \destination
+      type: \type time: \time
+      language: \zh
     timetable: stations: \stations trains: \trains
-    stations: {}
+    stations: zh: {}
 
   actual = suggestions-state state
   expected =
-    location: \location type: \type time: \time
+    start: \start destination: \destination
+    type: \type time: \time
     stations: \stations trains: \trains
-    station-names: void
+    station-names: {}
   t.same actual, expected, 'get sub state for suggestions'
 
-  stations = 1228: [train: 116 departure: '09:36']
+  stations =
+    1228: [train: 116 time: '09:36']
+    1242: [train: 116 time: '09:09']
   trains = 116:
-    * station: \1242 departure: '09:09'
-    * station: \1228 departure: '09:36'
+    * station: \1242 time: '09:09'
+    * station: \1228 time: '09:36'
   state =
-    location: \1228 type: \destination time: '2018-01-20T10:00:00.000Z'
+    start: \1242 destination: \1228 type: \destination
+    time: '2018-01-20T02:00:00.000Z'
     stations: stations, trains: trains
-    station-names: 1242: \新左營
   props = suggestions-props state
 
   actual = props.items.0
-  expected = station: \新左營 departure: '09:09' arrival: '09:36'
+  expected = departure: '09:09' arrival: '09:36'
   t.same actual, expected, 'list suggested trips'
 
   t.end!

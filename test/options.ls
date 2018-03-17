@@ -1,6 +1,6 @@
 import
   \./mock : {mock-bind}
-  \../src/options : {options-state, options-props, reduce}
+  \../src/options : {option-state, option-props, reduce}
 
 function main t
   actual = reduce\set-options {} \payload
@@ -8,31 +8,28 @@ function main t
   t.is actual, expected, 'merge options'
 
   state =
-    options: location: 1228 language: \zh
+    options: start: 1242 destination: 1228 language: \zh
     stations: zh: \stations-zh
-  sub-state = options-state state
+  sub-state = option-state state, name: \destination select: \station
 
-  actual = sub-state.location
+  actual = sub-state.value
   expected = 1228
-  t.is actual, expected, 'get options from state'
+  t.is actual, expected, 'get option value from state'
 
-  actual = sub-state.station-names
+  actual = sub-state.options
   expected = \stations-zh
   t.is actual, expected, 'get stations list from state'
 
-  state = location: 1228 time: '2018-01-12T00:59' stations: 1228: \台南
-  props = options-props state, mock-bind
+  state = value: 1228 name: \destination options: 1228: \台南
+  props = option-props state, mock-bind
 
-  actual = props.location.value
+  actual = props.value
   expected = 1228
   t.is actual, expected, 'pass station id'
 
-  actual = props.time.value
-  expected = '2018-01-12T00:59'
-  t.is actual, expected, 'pass departure/arrival time'
-
-  actual = props.time.on-change
-  expected = type: \set-options payload: time: \mock-value
+  actual = props.on-change
+  expected = type: \set-options payload: destination: \mock-value
+  t.same actual, expected, 'set state option value on input change'
 
   t.end!
 

@@ -8,7 +8,5 @@ reducers =
   timetable: timetable
   options: options
   stations: stations
-  timetable0: dummy
-  now: dummy, current-location: dummy, destination: dummy
 
 export default: reducers

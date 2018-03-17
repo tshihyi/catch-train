@@ -1,22 +1,27 @@
 import \./stations : {station-names}
 
-function options-state {options}: state
-  Object.assign {} options, station-names: station-names state
+target-types =
+  start: '出發'
+  destination: '抵達'
+
+option-source =
+  station: station-names
+  \target-type : -> target-types
+
+function option-state {options}: state, props
+  {name, select, ...attrs} = props
+  name: name, value: options[name], attrs: attrs
+  options: option-source[select]? state
 
 function set-options target: {value}, key
   type: \set-options payload: (key): value
 
-function input-props items, mock-bind
-  entries = Object.entries items .map ([key, value]) ->
-    (key): value: value, on-change: mock-bind set-options, key
-  Object.assign ...entries
-
-function options-props {station-names, time, type, location} bind-action
-  Object.assign {},
-    input-props {type, location, time: time.slice 0 16} bind-action
-    stations: station-names
+function option-props {name, value, options, attrs} bind-action
+  Object.assign {value, options},
+    on-change: bind-action set-options, name
+    attrs
 
 reduce =
   \set-options : (, payload) -> payload
 
-export {reduce, options-state, options-props}
+export {reduce, option-state, option-props}
